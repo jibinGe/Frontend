@@ -9,26 +9,26 @@ pipeline {
  
         stage('Build') {
             steps {
-                sh 'npm install'
+                sh 'npm run build'
             }
         }
 
-        stage('Deploy') {
-            steps {
-                sh 'rsync -ravz build/ jenkins@13.228.104.12:/home/ubuntu/genesys/genesys'
-            }
-        }
-
-        // stage('Deploying the build') {
+        // stage('Deploy') {
         //     steps {
-        //         script {
-        //             echo "Copying Build to another directory"
-        //             sh 'sudo rm -rf /home/ubuntu/genesys/genesys/build'
-        //             sh 'sudo cp -r /var/lib/jenkins/workspace/React-Frontend_main/build /home/ubuntu/genesys/genesys'
-        //             echo "Build Completed"
-        //         }
+        //         sh 'rsync -ravz build/ jenkins@13.228.104.12:/home/ubuntu/genesys/genesys'
         //     }
         // }
+
+        stage('Deploying the build') {
+            steps {
+                script {
+                    echo "Copying Build to another directory"
+                    sh 'sudo rm -rf /home/ubuntu/genesys/genesys/build'
+                    sh 'sudo cp -r /var/lib/jenkins/workspace/React-Frontend_main/build /home/ubuntu/genesys/genesys'
+                    echo "Build Completed"
+                }
+            }
+        }
     }
 
 //     post {
