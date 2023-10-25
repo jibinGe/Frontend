@@ -24,4 +24,21 @@ pipeline {
             }
         }
     }
+
+    post {
+    success {
+        emailext(
+            subject: 'Jenkins Pipeline Success',
+            body: 'Your Jenkins pipeline has completed successfully.',
+            to: 'jibingtsr@gmail.com'
+        )
+    }
+    failure {
+        emailext(
+            subject: 'Jenkins Pipeline Failure',
+            body: 'Your Jenkins pipeline has failed. Please investigate.',
+            to: 'jibingtsr@gmail.com'
+        )
+    }
+}
 }
