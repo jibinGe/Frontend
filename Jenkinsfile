@@ -15,7 +15,7 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sh 'rsync -ravz build/ ubunt@13.228.104.12:/home/ubuntu/genesys/genesys'
+                sh 'rsync -ravz build/ jenkins@13.228.104.12:/home/ubuntu/genesys/genesys'
             }
         }
 
