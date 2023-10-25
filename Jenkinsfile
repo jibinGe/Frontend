@@ -17,7 +17,7 @@ pipeline {
             steps {
                 echo "Copying Build to another directory"
                 sh 'sudo rm -r /home/ubuntu/genesys/genesys/build'
-                sh 'sudo cp -r /var/lib/jenkins/workspace/React-Frontend_main/build /home/ubuntu/genesys/genesys/'
+                sh 'sudo cp -r /var/lib/jenkins/workspace/React-Frontend_main/build /home/ubuntu/genesys/genesys'
                 echo "Build Completed"
             }
         }
