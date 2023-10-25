@@ -6,7 +6,7 @@ pipeline {
                 sh 'npm install --legacy-peer-deps'
             }
         }
-
+ 
         stage('Build') {
             steps {
                 sh 'npm install'
