@@ -56,6 +56,11 @@ const TableData = ({ item, index, deletePatient, page }) => {
     history("/report");
   };
 
+  function removePrefix(data) {
+    const match = data.match(/\d+_(.+)/);
+    return match ? match[1] : data;
+  }
+
   return (
     <>
       <TableRows>
@@ -69,7 +74,7 @@ const TableData = ({ item, index, deletePatient, page }) => {
         >
            {(page - 1) * 7 + index + 1}
         </TableCell>
-        <TableCell>{item[1]}</TableCell>
+        <TableCell>{item[1] ? removePrefix(item[1]) : ''}</TableCell>
         <TableCell>{item[2].split(" ")[0]}</TableCell>
         <TableCell>{item[2].split(" ")[1]}</TableCell>
         <TableCell>{formateDate(item[3])}</TableCell>
