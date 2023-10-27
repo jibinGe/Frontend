@@ -259,7 +259,10 @@ const ActivityDetails = ({ setSelectedButton,setSelectedItem }) => {
       };
   }, []);
 
-
+  function removePrefix(data) {
+    const match = data.match(/\d+_(.+)/);
+    return match ? match[1] : data;
+  }
   function handleSearch(e) {
     setSearchQuery(e.target.value);
   }
@@ -357,7 +360,8 @@ const ActivityDetails = ({ setSelectedButton,setSelectedItem }) => {
                 <TableCell>
                   <Box>
                     <img src={Profile} />
-                    <span style={{ marginLeft: "5px" }}>{item.PatientId}</span>
+                    <span style={{ marginLeft: "5px" }}>{item.PatientId ? removePrefix(item.PatientId) : ''}</span> 
+                    {/* {item.PatientId ? removePrefix(item.PatientId) : ''} */}
                   </Box>
                 </TableCell>
                 <TableCell>{item.PatientName}</TableCell>

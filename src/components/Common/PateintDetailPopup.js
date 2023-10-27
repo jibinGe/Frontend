@@ -26,6 +26,12 @@ const PateintDetailPopup = ({ isOpen1, setIsOpen1 }) => {
 
   let patientInfo = JSON.parse(localStorage.getItem("patient"));
 
+
+  function removePrefix(data) {
+    const match = data.match(/\d+_(.+)/);
+    return match ? match[1] : data;
+  }
+
   return (
     <div
       style={{
@@ -50,12 +56,11 @@ const PateintDetailPopup = ({ isOpen1, setIsOpen1 }) => {
 
         <h2 className="txt8">Patient Information</h2>
 
-     
-
+        
         <div style={styles}>
         <div className="patient-box">
             <span className="patientinfo-label">Patient ID</span>
-            <span className="patientinfo-value">{patientInfo[1]}</span>
+            <span className="patientinfo-value">{removePrefix(patientInfo[1])}</span>
         </div>
 
         <div className="patient-box">

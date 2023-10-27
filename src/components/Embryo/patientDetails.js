@@ -36,6 +36,11 @@ function PatientDetails() {
     // });
   }, [isOpen]);
 
+  function removePrefix(data) {
+    const match = data.match(/\d+_(.+)/);
+    return match ? match[1] : data;
+  }
+
   return (
     currentPatient && (
       <div style={{ position: "relative" }}>
@@ -82,8 +87,8 @@ function PatientDetails() {
           <div className="details-container">
             <div className="properties">
               <span className="field">Patient ID</span>
-              <span className="value">{currentPatient[1]}</span>
-            </div>
+              <span className="value">{currentPatient[1] ? removePrefix(currentPatient[1]) : ''}</span>
+          </div>
             <div className="properties">
               <span className="field">First Name</span>
               <span className="value">{currentPatient[2]?.split(" ")[0]}</span>

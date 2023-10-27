@@ -27,6 +27,11 @@ const TableContainer = styled(Box)({
   margin: "0px auto ",
 });
 
+function removePrefix(data) {
+  const match = data.match(/\d+_(.+)/);
+  return match ? match[1] : data;
+}
+
 const Details = ({ totalEmbryo }) => {
   const patientInfo = JSON.parse(localStorage.getItem("patient"));
   const PatientData = {

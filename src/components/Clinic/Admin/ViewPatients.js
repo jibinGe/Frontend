@@ -313,6 +313,7 @@ const ViewPatients = ({ setSelectedButton }) => {
     (page - 1) * rowsPerPage,
     (page - 1) * rowsPerPage + rowsPerPage
   );
+  console.log(rows,"DDDDDDDDDDDDD")
   return (
     <Box sx={{ width: "77%", height: "100%" }}>
       <Box
