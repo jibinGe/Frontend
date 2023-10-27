@@ -73,7 +73,7 @@ const Login = () => {
     <div className="container3">
       <div className="out-box5 ">
         <div className="contain1 ">
-          <h2 className="txt8">Login.</h2>
+          <h2 className="txt8">Login</h2>
           <form>
             <div className="in-box">
               <div>
