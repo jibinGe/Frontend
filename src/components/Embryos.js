@@ -41,6 +41,18 @@ import CircularProgress from '@mui/material/CircularProgress';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import { makeStyles } from "@mui/styles";
+import {
+  Page,
+  Text,
+  View,
+  Document,
+  StyleSheet,
+  PDFDownloadLink,
+  pdf,
+} from "@react-pdf/renderer";
+import MainReport from "./Patient/MainReport";
+
+
 const useStyles = makeStyles((theme) => ({
   modal: {
     '& .MuiBackdrop-root': {
@@ -521,31 +533,104 @@ const Embryos = ({ setSelectedButton,setSelectedItem }) => {
         
       };
 
-      fetchJSON("patient/viewreport", "POST", patientData)
-      .then((data_response) => {
-        if (data_response.success == true) {
+      generatePDF();
+      NotificationManager.success(
+        "Download Started",
+        "Embryo",
+        1000
+      )
+    //   fetchJSON("patient/viewreport", "POST", patientData)
+    //   .then((data_response) => {
+    //     if (data_response.success == true) {
           
-        } else {
+    //     } else {
           
-        }
-      })
-      .catch((err) => {
+    //     }
+    //   })
+    //   .catch((err) => {
          
-      });
+    //   });
 
 
-      const newPath = "/MainReport";
-      const currentURL = location.pathname;
-      const baseURL = window.location.href.replace(currentURL, '');
-      const fullURL = `${baseURL}${newPath}`;
+    //   const newPath = "/MainReport";
+    //   const currentURL = location.pathname;
+    //   const baseURL = window.location.href.replace(currentURL, '');
+    //   const fullURL = `${baseURL}${newPath}`;
   
-      window.open(fullURL, "_blank");
+    //   window.open(fullURL, "_blank");
      history("/report");
     }
   
 
   
     // If you also need to send state to the new tab, you'll have to use other mechanisms, like local storage or session storage.
+};
+const sliceEmbryoArray = (data) => {
+  const sorted = [...data].sort((a, b) => b.percentage - a.percentage);
+
+  let newArrayNumber = Math.ceil(sorted.length / 4);
+  let result = [];
+  for (let i = 0; i < newArrayNumber; i++) {
+    result.push(sorted.slice(i * 4, (i + 1) * 4));
+  }
+
+  console.log(result);
+  return result;
+};
+const generatePDF = async () => {
+  const newPath = "/ReportDownload";
+  const currentURL = location.pathname;
+  const baseURL = window.location.href.replace(currentURL, "");
+  const fullURL = `${baseURL}${newPath}`;
+
+  // window.open(fullURL, "_blank");
+
+    setLoading(true);
+    const patientData1 = JSON.parse(localStorage.getItem("patient"));
+    let clinicinfo = JSON.parse(localStorage.getItem("clinic"));
+
+    const patientData = {
+      id: patientData1[1],
+      name: patientData1[2],
+      age: 0,
+      DOB:patientData1[3],
+      retreval: new Date(),
+    };
+
+    const clinicData = {
+      clinicName: clinicinfo[1],
+      drName: clinicinfo[7],
+    };
+    const reportData = {
+      date: new Date(),
+      embryos: embryoInfo.length,
+    };
+    const blob = pdf(<MainReport
+    patientData={patientData}
+    clinicData={clinicData}
+    reportData={reportData}
+    data={sliceEmbryoArray(embryoInfo)}
+  />).toBlob();
+
+    blob.then(result => {
+     // saveAs(result, 'document.pdf');
+    //  setLoading(false);
+//    const blobURL = URL.createObjectURL(result);
+ //   const newWindow = window.open(blobURL, '_blank');
+
+   // newWindow.location.href = blobURL;
+
+      saveAs(result, patientData1[2] + '.pdf');
+
+    // newWindow.onbeforeunload = () => {
+    //   setTimeout(() => {
+    //     newWindow.close();
+    //   }, 1000); // Close after 1 second. Adjust the time if needed.
+    // };
+
+    setLoading(false);
+
+    });
 };
 
   const [isOpenGuidline, setIsOpenGuidline] = useState(false);
