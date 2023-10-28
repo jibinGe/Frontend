@@ -26,7 +26,7 @@ const useStyles = makeStyles({
   },
 });
 
- 
+  
 
 const Date = styled(DatePicker)({
   borderRadius: "12px",
@@ -255,6 +255,12 @@ if (name === "dob") {
     }
   };
 
+  function removePrefix(data) {
+    const match = data.match(/\d+_(.+)/);
+    return match ? match[1] : data;
+  }
+
+  
   return (
     <>
     
@@ -391,7 +397,7 @@ if (name === "dob") {
                 className="inpt"
                 style={{ width: isOpen ? "90%" : "100%" }}
                 name="patient_id"
-                value={inputs.patient_id}
+                value={removePrefix(inputs.patient_id)}
                 onChange={handleChange}
                 disabled={true}
               />

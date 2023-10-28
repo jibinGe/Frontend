@@ -212,7 +212,7 @@ const PaymentList = ({ setSelectedButton }) => {
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await fetchJSON("clinic/payment-summary", "POST", "");
+        const data = await fetchJSON("/clinic/topay", "POST", "");
         console.log(data);
         setEmployeeDetails(data.payment_summary);
       } catch (ERR) {
@@ -233,7 +233,7 @@ const PaymentList = ({ setSelectedButton }) => {
     // Update the filter options based on the selected value
     setFilterOptions(event.target.value);
   };
-  const filteredProducts = EmployeeDetails.filter((employee) => {
+  const filteredProducts = EmployeeDetails?.filter((employee) => {
     const matchesSearchQuery = employee.month
     .toLowerCase()
     .includes(searchQuery.toLowerCase());
@@ -252,7 +252,7 @@ const PaymentList = ({ setSelectedButton }) => {
 
   
   };
-  const rows = filteredProducts.slice(
+  const rows = filteredProducts?.slice(
     (page - 1) * rowsPerPage,
     (page - 1) * rowsPerPage + rowsPerPage
   );
@@ -448,7 +448,7 @@ const PaymentList = ({ setSelectedButton }) => {
               </TableHead>
 
               <TableBody>
-                {rows.map((item) => (
+                {rows?.map((item) => (
                   <TableRows>
                     <TableCell
                       sx={{

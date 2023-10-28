@@ -287,7 +287,7 @@ const Payment = ({ setSelectedButton }) => {
     }
   });
   const handleClick = (value) => {
-    setSelectedButton(12, value);
+    setSelectedButton(6, value);
   };
 
   const rows = filteredProducts?.slice(
