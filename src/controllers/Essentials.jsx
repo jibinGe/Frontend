@@ -26,7 +26,7 @@ const formateDate = (dateString) => {
 const fetchJSON = async (path, method, inputData) => {
   let fetched;
   if (method === "POST") {
-    fetched = await fetch("http://127.0.0.1:5001/" + path, {
+    fetched = await fetch("https://api2.genesysailabs.com/" + path, {
       method: method,
       headers: {
         "Content-Type": "application/json",
@@ -35,7 +35,7 @@ const fetchJSON = async (path, method, inputData) => {
       body: JSON.stringify(inputData),
     }).then((response) => response.json());
   } else if (method === "GET") {
-    fetched = await fetch("http://127.0.0.1:5001/" + path, {
+    fetched = await fetch("https://api2.genesysailabs.com/" + path, {
       method: method,
       headers: {
         "Content-Type": "application/json",
@@ -44,7 +44,7 @@ const fetchJSON = async (path, method, inputData) => {
     }).then((response) => response.json());
   }
   else if (method === "DELETE") {
-    fetched = await fetch("http://127.0.0.1:5001/" + path, {
+    fetched = await fetch("https://api2.genesysailabs.com/" + path, {
       method: method,
       headers: {
         "Content-Type": "application/json",

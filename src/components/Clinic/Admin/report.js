@@ -472,12 +472,19 @@ const Report = ({ setSelectedButton }) => {
 
       <div className="emb-container col-12 col-md-12 ">
         {loading && (
-          <Backdrop
-            sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-            open={loading}
-          >
-            <CircularProgress color="inherit" />
-          </Backdrop>
+          
+          NotificationManager.success(
+            "Download Started",
+            "Embryo",
+            1000
+          )
+
+          // <Backdrop
+          //   sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          //   open={loading}
+          // >
+          //   <CircularProgress color="inherit" />
+          // </Backdrop>
         )}
         <div className="flex-box">
           <div className="embryo-heading">Embryos</div>
