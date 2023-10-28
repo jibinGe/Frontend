@@ -48,7 +48,7 @@ const Header = () => {
 
   
   const handleLogout = async () => {
-    await fetch("https://api2.genesysailabs.com/logout", {
+    await fetch("http://127.0.0.1:5001/logout", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -7,7 +7,10 @@ import {
   Typography,
   Button,
   InputAdornment,
-  MenuItem,FormControl, InputLabel, Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Select,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
@@ -15,20 +18,20 @@ import TextField from "@mui/material/TextField";
 import Pagination from "@mui/material/Pagination";
 
 import { useTheme } from "@mui/material/styles";
- 
+
 import { IndeterminateCheckBox } from "@mui/icons-material";
- 
+
 import { useNavigate } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
- 
+
 import { Delete } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
- 
+
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
- 
+
 import { DeleteForever } from "@mui/icons-material";
 import {
   Table,
@@ -43,18 +46,18 @@ import { fetchJSON } from "../../../controllers/Essentials";
 import { formateDate } from "../../../controllers/Essentials";
 
 const months = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 const currencies = [
   {
@@ -77,52 +80,47 @@ const currencies = [
 
 const useStyles = makeStyles((theme) => ({
   pagination: {
-    display: 'flex',
-    justifyContent: 'center',
-    
+    display: "flex",
+    justifyContent: "center",
+
     marginTop: useTheme().spacing(2),
     marginRight: useTheme().spacing(2),
-
   },
-    roundedPagination: {
-      background:"none",
-      '& .MuiPaginationItem-root': {
-        border: 'none',
-        outline:"none",
-        borderRadius: '8px',
-        color: '#2279F5',
-        backgroundColor: '#FFFFFF',// Change the background color here
-        '&:hover': {
-          background:"#FFFFFF",
-          borderColor: '#2279F5', // Change the hover background color here
-        },
-        '& button': {
-          borderColor: '#2279F5', // Set the desired border color
-        },
-        '&.Mui-selected': {
-          color:"#2279F5",
-          border: '1px solid #2279F5',
-          background:"#FFFFFF", // Change the selected text color here
-          // '&:hover': {
-          //   backgroundColor: '#455a64', // Change the selected hover background color here
-          // },
-        },
+  roundedPagination: {
+    background: "none",
+    "& .MuiPaginationItem-root": {
+      border: "none",
+      outline: "none",
+      borderRadius: "8px",
+      color: "#2279F5",
+      backgroundColor: "#FFFFFF", // Change the background color here
+      "&:hover": {
+        background: "#FFFFFF",
+        borderColor: "#2279F5", // Change the hover background color here
       },
-      
-    },
-
-    root: {
-      '& .MuiInputBase-root': {
-        border: 'none', // Remove the border
-         
+      "& button": {
+        borderColor: "#2279F5", // Set the desired border color
       },
-      '& .MuiInputBase-input': {
-        
-        background:"#FFFFFF",
-        textAlign:"center" // Optional: Adjust the input padding if needed
+      "&.Mui-selected": {
+        color: "#2279F5",
+        border: "1px solid #2279F5",
+        background: "#FFFFFF", // Change the selected text color here
+        // '&:hover': {
+        //   backgroundColor: '#455a64', // Change the selected hover background color here
+        // },
       },
     },
+  },
 
+  root: {
+    "& .MuiInputBase-root": {
+      border: "none", // Remove the border
+    },
+    "& .MuiInputBase-input": {
+      background: "#FFFFFF",
+      textAlign: "center", // Optional: Adjust the input padding if needed
+    },
+  },
 
   textField: {
     paddingBottom: "10px",
@@ -165,7 +163,7 @@ const BoxContainer1 = styled(Button)({
   borderRadius: "12px",
   display: "flex",
   alignItems: "center",
-  
+
   borderRadius: "12px",
 });
 const BoxContainerDays = styled(Button)({
@@ -213,19 +211,18 @@ const Payment = ({ setSelectedButton }) => {
   const [rowsPerPage, setRowsPerPage] = useState(7);
   const [PaymentDetails, setPaymentDetails] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
- 
+
   const history = useNavigate();
-  const currentMonth = new Date().getMonth() + 1; 
+  const currentMonth = new Date().getMonth() + 1;
   const [filterOptions, setFilterOptions] = useState(currentMonth.toString());
   const currentYear = new Date().getFullYear().toString();
   const [filterOptionsyear, setFilterOptionsyear] = useState(currentYear);
 
   //const [uPage, setPage] = useState(1);
- 
+
   const [dele, setDelete] = useState();
 
   const [isOpen, setIsOpen] = useState("");
-  
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -236,44 +233,39 @@ const Payment = ({ setSelectedButton }) => {
     setPage(1);
   };
 
- 
   function handleSearch(e) {
     setSearchQuery(e.target.value);
   }
- 
+
   const handleFilterOptionChangeyear = (event) => {
     // Update the filter options based on the selected value
     setFilterOptionsyear(event.target.value);
   };
 
- 
- 
   React.useEffect(() => {
-
     let clinic = JSON.parse(localStorage.getItem("clinic"));
-    
 
     const clinic_id = {
-      clinic_id: clinic[0]
-     
+      clinic_id: clinic[0],
     };
 
-    
     const fetchData = async () => {
       try {
-        const data = await fetchJSON("clinic/payment-summary", "POST", clinic_id);
+        const data = await fetchJSON(
+          "clinic/payment-summary",
+          "POST",
+          clinic_id
+        );
         console.log(data);
         setPaymentDetails(data.payment_summary);
       } catch (ERR) {
-       // alert("refresh and login again");
-      //  history("/");
+        // alert("refresh and login again");
+        //  history("/");
       }
     };
-    
+
     fetchData();
   }, []);
-  
-
 
   function handleSearch(e) {
     setSearchQuery(e.target.value);
@@ -282,12 +274,11 @@ const Payment = ({ setSelectedButton }) => {
     // Update the filter options based on the selected value
     setFilterOptions(event.target.value);
   };
-  const filteredProducts = PaymentDetails.filter((payment) => {
-    const matchesSearchQuery = payment.month
-    .toLowerCase()
-    .includes(searchQuery.toLowerCase());
 
-    
+  const filteredProducts = PaymentDetails?.filter((payment) => {
+    const matchesSearchQuery = payment.month
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
 
     if (searchQuery === "" && filterOptions === "") {
       return true; // Show all products when both search query and filter options are empty
@@ -296,15 +287,10 @@ const Payment = ({ setSelectedButton }) => {
     }
   });
   const handleClick = (value) => {
- 
-   
- 
-     setSelectedButton(12,value);
-
-  
+    setSelectedButton(12, value);
   };
 
-  const rows = filteredProducts.slice(
+  const rows = filteredProducts?.slice(
     (page - 1) * rowsPerPage,
     (page - 1) * rowsPerPage + rowsPerPage
   );
@@ -341,45 +327,46 @@ const Payment = ({ setSelectedButton }) => {
             }}
           >
             <Typography variant="span">Filter by</Typography>
-            
+
             <FormControl>
-            <select
-                  id="cars"
-                  className="inpt5"
-                  name="cars"
-                  value={filterOptions}
-                  onChange={handleFilterOptionChange}
-                  multiple={false}
-                >
-                  <option value="" disabled selected>
-                    Month
+              <select
+                id="cars"
+                className="inpt5"
+                name="cars"
+                value={filterOptions}
+                onChange={handleFilterOptionChange}
+                multiple={false}
+              >
+                <option value="" disabled selected>
+                  Month
+                </option>
+
+                {months?.map((month, index) => (
+                  <option key={index} value={index + 1}>
+                    {month}
                   </option>
-                 
-        {months.map((month, index) => (
-          <option key={index} value={index + 1}>{month}</option>
-        ))} 
-      
-                </select>
-          </FormControl>
-        
-    <FormControl>
-    <select
-                  id="cars"
-                  value={filterOptionsyear}
-                  onChange={handleFilterOptionChangeyear}
-                  className="inpt6"
-                  name="cars"
-                  multiple={false}
-                >
-                  {/* <option value="" disabled selected>
+                ))}
+              </select>
+            </FormControl>
+
+            <FormControl>
+              <select
+                id="cars"
+                value={filterOptionsyear}
+                onChange={handleFilterOptionChangeyear}
+                className="inpt6"
+                name="cars"
+                multiple={false}
+              >
+                {/* <option value="" disabled selected>
                     Year
                   </option> */}
-                  <option value="2023">2023</option>
-                  <option value="2024">2024</option>
-                  <option value="2025">2025</option>
-                  <option value="2026">2026</option>
-                </select>
-    </FormControl>
+                <option value="2023">2023</option>
+                <option value="2024">2024</option>
+                <option value="2025">2025</option>
+                <option value="2026">2026</option>
+              </select>
+            </FormControl>
           </Box>
         </Box>
       </FormHeader>
@@ -398,7 +385,7 @@ const Payment = ({ setSelectedButton }) => {
           </TableHead>
 
           <TableBody>
-            {rows.map((item) => (
+            {rows?.map((item) => (
               <TableRows>
                 <TableCell
                   sx={{
@@ -412,13 +399,36 @@ const Payment = ({ setSelectedButton }) => {
                 </TableCell>
                 <TableCell>{item.patient_scanned}</TableCell>
                 <TableCell>{item.amount}</TableCell>
-                <TableCell>{ formateDate(item.next_bill_due_date)}</TableCell>
+                <TableCell>{formateDate(item.next_bill_due_date)}</TableCell>
                 <TableCell>
-
                   <Box sx={{ display: "flex", gap: "5px" }}>
-                    <BoxContainerDays variant="text" sx={{background : item.due!=="__" ? "#FEF9E6" : "#FFFFFF",boxShadow  : item.due!=="__" ? "0px 2px 40px rgba(34, 121, 245, 0.15)" : "0px 2px 40px #FFFFFF"}}  onClick={handleClick}>
+                    <BoxContainerDays
+                      variant="text"
+                      sx={{
+                        background:
+                          item.status === "Paid"
+                            ? "transparent"
+                            : item.due_in !== "__"
+                            ? "#FEF9E6"
+                            : "#FFFFFF",
+                        boxShadow:
+                          item.due !== "__" && item.status !== "Paid"
+                            ? "0px 2px 40px rgba(34, 121, 245, 0.15)"
+                            : "0px 2px 40px #FFFFFF",
+                        color: item.status === "Paid" ? "black" : "inherit",
+                        fontWeight: item.status === "Paid" ? "bold" : "normal",
+                      }}
+                    >
                       <StyledDaysLeft variant="h6" component="h6">
-                        {item.due_in}
+                        {item.status === "Paid" ? (
+                          <strong
+                            style={{ color: "black", fontWeight: "bolder" }}
+                          >
+                            -
+                          </strong>
+                        ) : (
+                          item.due_in
+                        )}
                       </StyledDaysLeft>
                     </BoxContainerDays>
                   </Box>
@@ -431,20 +441,27 @@ const Payment = ({ setSelectedButton }) => {
                     borderLeft: "none",
                   }}
                 >
-                  {item.due !== "__" ? (
-                  <Box sx={{ display: "flex", gap: "5px" }}>
-                    <BoxContainer variant="text" onClick={handleClick}>
-                      <StyledTypography variant="h6" component="h6">
-                        Pay
-                      </StyledTypography>
-                    </BoxContainer>
-                  </Box>) : <Box sx={{ display: "flex", gap: "5px" }}>
-                    <BoxContainer1 disabled variant="text" onClick={handleClick}>
-                      <StyledTypography1 variant="h6" component="h6">
-                        Paid
-                      </StyledTypography1>
-                    </BoxContainer1>
-                  </Box>}
+                  {item.status == "Unpaid" ? (
+                    <Box sx={{ display: "flex", gap: "5px" }}>
+                      <BoxContainer variant="text" onClick={handleClick}>
+                        <StyledTypography variant="h6" component="h6">
+                          Pay
+                        </StyledTypography>
+                      </BoxContainer>
+                    </Box>
+                  ) : (
+                    <Box sx={{ display: "flex", gap: "5px" }}>
+                      <BoxContainer1
+                        disabled
+                        variant="text"
+                        onClick={handleClick}
+                      >
+                        <StyledTypography1 variant="h6" component="h6">
+                          Paid
+                        </StyledTypography1>
+                      </BoxContainer1>
+                    </Box>
+                  )}
                 </TableCell>
               </TableRows>
             ))}
@@ -453,12 +470,12 @@ const Payment = ({ setSelectedButton }) => {
       </Container>
 
       <div className={classes.pagination}>
-      <Pagination
-            className={classes.roundedPagination}
-            count={Math.ceil(filteredProducts.length / rowsPerPage)}
-            page={page}
-            onChange={handleChangePage}
-          />
+        <Pagination
+          className={classes.roundedPagination}
+          count={Math.ceil(filteredProducts?.length / rowsPerPage)}
+          page={page}
+          onChange={handleChangePage}
+        />
       </div>
     </Box>
   );

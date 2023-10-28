@@ -1,20 +1,14 @@
-import React, { useState ,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../Embryo/index.css";
-import {
-  Container,
-  styled,
-  Box,
-  Typography,
-  Button,
-} from "@mui/material";
+import { Container, styled, Box, Typography, Button } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import TextField from "@mui/material/TextField";
 import { Delete } from "@mui/icons-material";
-import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
-import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 
-import { useTheme } from '@mui/material/styles';
+import { useTheme } from "@mui/material/styles";
 import {
   Table,
   TableBody,
@@ -24,67 +18,64 @@ import {
 } from "@mui/material";
 
 const currencies = [
-    {
-      value: 'USD',
-      label: '$',
-    },
-    {
-      value: 'EUR',
-      label: '€',
-    },
-    {
-      value: 'BTC',
-      label: '฿',
-    },
-    {
-      value: 'JPY',
-      label: '¥',
-    },
-  ];
+  {
+    value: "USD",
+    label: "$",
+  },
+  {
+    value: "EUR",
+    label: "€",
+  },
+  {
+    value: "BTC",
+    label: "฿",
+  },
+  {
+    value: "JPY",
+    label: "¥",
+  },
+];
 
 const useStyles = makeStyles((theme) => ({
   pagination: {
-    display: 'flex',
-    justifyContent: 'center',
-    
+    display: "flex",
+    justifyContent: "center",
+
     marginTop: useTheme().spacing(1),
     marginRight: useTheme().spacing(2),
-
   },
-    roundedPagination: {
-      background:"none",
-      '& .MuiPaginationItem-root': {
-        borderRadius: '0%',
-        backgroundColor: '#FFFFFF',// Change the background color here
-        '&:hover': {
-          backgroundColor: '#bdbdbd', // Change the hover background color here
-        },
-        '&.Mui-selected': {
-          backgroundColor: '#607d8b', // Change the selected background color here
-          color: '#ffffff', // Change the selected text color here
-          '&:hover': {
-            backgroundColor: '#455a64', // Change the selected hover background color here
-          },
+  roundedPagination: {
+    background: "none",
+    "& .MuiPaginationItem-root": {
+      borderRadius: "0%",
+      backgroundColor: "#FFFFFF", // Change the background color here
+      "&:hover": {
+        backgroundColor: "#bdbdbd", // Change the hover background color here
+      },
+      "&.Mui-selected": {
+        backgroundColor: "#607d8b", // Change the selected background color here
+        color: "#ffffff", // Change the selected text color here
+        "&:hover": {
+          backgroundColor: "#455a64", // Change the selected hover background color here
         },
       },
     },
+  },
 
-    root: {
-        '& .MuiInputBase-root': {
-          border: 'none', // Remove the border
-           // Optional: Set the border radius if needed
-        },
-        '& .MuiInputBase-input': {
-          
-          background:"#FFFFFF", // Optional: Adjust the input padding if needed
-        },
-      },
+  root: {
+    "& .MuiInputBase-root": {
+      border: "none", // Remove the border
+      // Optional: Set the border radius if needed
+    },
+    "& .MuiInputBase-input": {
+      background: "#FFFFFF", // Optional: Adjust the input padding if needed
+    },
+  },
 
   textField: {
     paddingBottom: "10px",
   },
 }));
-
 
 // const useStyles = makeStyles({
 //     tableRow: {
@@ -98,7 +89,6 @@ const FormHeader = styled(Container)({
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
-  
 });
 const FormTable = styled(Container)({
   width: "95%",
@@ -119,9 +109,8 @@ const TableRows = styled(TableRow)({
 });
 const Text = styled(TextField)({
   width: "88px",
-  height:"44px",
-  background:"#FFFFFF",
-  
+  height: "44px",
+  background: "#FFFFFF",
 });
 
 const BoxContainer = styled(Button)({
@@ -144,9 +133,9 @@ const StyledTypography = styled(Typography)({
   color: "#6C7C93",
 });
 
-const Patients = ({setSelectedButton}) => {
-    const history = useNavigate();
-    const arr = [1,2,3,4,5,6,7,8];
+const Patients = ({ setSelectedButton }) => {
+  const history = useNavigate();
+  const arr = [1, 2, 3, 4, 5, 6, 7, 8];
   const classes = useStyles();
   //const [uPage, setPage] = useState(1);
   const [page, setPage] = useState(1);
@@ -160,44 +149,53 @@ const Patients = ({setSelectedButton}) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(1);
   };
-  const rows = arr.slice((page-1)* rowsPerPage, (page-1) * rowsPerPage + rowsPerPage);
+  const rows = arr.slice(
+    (page - 1) * rowsPerPage,
+    (page - 1) * rowsPerPage + rowsPerPage
+  );
   const handleClick = () => {
     // setIsOpen(true);
     // props.setIsEdited(true);
     setSelectedButton(7);
   };
   return (
-    
-        <Box
+    <Box
       sx={{
         width: "73%",
-        height:880,
+        height: 880,
         margin: "40px auto",
         background: "linear-gradient(360deg, #CEE1FD 8.33%, #CCF6FF 91.67%)",
         borderRadius: "12px",
-        
       }}
     >
-        <Box sx={{ background:"#ffffff"}}><button style={{marginLeft:0, marginTop:0, paddingBottom:30}} onClick={()=>setSelectedButton(7)} className='back-button'>Back</button></Box>
+      <Box sx={{ background: "#ffffff" }}>
+        <button
+          style={{ marginLeft: 0, marginTop: 0, paddingBottom: 30 }}
+          onClick={() => setSelectedButton(7)}
+          className="back-button"
+        >
+          Back
+        </button>
+      </Box>
       <FormHeader>
-        
-        <Box sx={{marginTop:"32px"}}>
-          <Typography variant="h6" sx={{fontWeight:600}}>Patients List</Typography>
+        <Box sx={{ marginTop: "32px" }}>
+          <Typography variant="h6" sx={{ fontWeight: 600 }}>
+            Patients List
+          </Typography>
         </Box>
-        
       </FormHeader>
 
       <Container>
         <Table sx={{ borderCollapse: "separate", borderSpacing: "0 10px" }}>
           <TableHead sx={{ marginBottom: "0px", borderBottom: "none" }}>
             <TableRow>
-            <TableCell style={{fontWeight:600}}># </TableCell>
-              <TableCell style={{fontWeight:600}}>Patient Id</TableCell>
-              <TableCell style={{fontWeight:600}}>First Name</TableCell>
-              <TableCell style={{fontWeight:600}}>Last Name</TableCell>
-              <TableCell style={{fontWeight:600}}>Report Date</TableCell>
-              <TableCell style={{fontWeight:600}}>Contact No</TableCell>
-              <TableCell style={{fontWeight:600}}>Action</TableCell>
+              <TableCell style={{ fontWeight: 600 }}># </TableCell>
+              <TableCell style={{ fontWeight: 600 }}>Patient Id</TableCell>
+              <TableCell style={{ fontWeight: 600 }}>First Name</TableCell>
+              <TableCell style={{ fontWeight: 600 }}>Last Name</TableCell>
+              <TableCell style={{ fontWeight: 600 }}>Report Date</TableCell>
+              <TableCell style={{ fontWeight: 600 }}>Contact No</TableCell>
+              <TableCell style={{ fontWeight: 600 }}>Action</TableCell>
             </TableRow>
           </TableHead>
 
@@ -226,29 +224,60 @@ const Patients = ({setSelectedButton}) => {
                     border: "1px solid #E2E5E9",
                     borderLeft: "none",
                   }}
-                ><Box sx={{display:"flex",gap:"5px"}}>
-                    <Box sx={{width:"32px",height:"32px",borderRadius:"34px",background:"#CCF6FF",display:"flex",alignItems:"center",justifyContent:"center",color:"#00D2FE"}} onClick={()=> history("/report")}><VisibilityOutlinedIcon sx={{ }}/></Box>
-                    <Box sx={{width:"32px",height:"32px",borderRadius:"34px",background:"#E7F0FE",display:"flex",alignItems:"center",justifyContent:"center",color:"#2279F5"}}><BorderColorOutlinedIcon sx={{ }}/></Box>
-                    <Box sx={{width:"32px",height:"32px",borderRadius:"34px",background:"#FEE6E7",display:"flex",alignItems:"center",justifyContent:"center",color:"#FB3B42"}}><Delete sx={{ }}/></Box>
-                    
-                </Box>
-                  
+                >
+                  <Box sx={{ display: "flex", gap: "5px" }}>
+                    <Box
+                      sx={{
+                        width: "32px",
+                        height: "32px",
+                        borderRadius: "34px",
+                        background: "#CCF6FF",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: "#00D2FE",
+                      }}
+                      onClick={() => history("/report")}
+                    >
+                      <VisibilityOutlinedIcon sx={{}} />
+                    </Box>
+                    <Box
+                      sx={{
+                        width: "32px",
+                        height: "32px",
+                        borderRadius: "34px",
+                        background: "#E7F0FE",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: "#2279F5",
+                      }}
+                    >
+                      <BorderColorOutlinedIcon sx={{}} />
+                    </Box>
+                    <Box
+                      sx={{
+                        width: "32px",
+                        height: "32px",
+                        borderRadius: "34px",
+                        background: "#FEE6E7",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: "#FB3B42",
+                      }}
+                    >
+                      <Delete sx={{}} />
+                    </Box>
+                  </Box>
                 </TableCell>
               </TableRows>
             ))}
           </TableBody>
         </Table>
       </Container>
-      
-      
-      
-    
-      
     </Box>
-        
-    
-    
-  )
-}
+  );
+};
 
-export default Patients
+export default Patients;
