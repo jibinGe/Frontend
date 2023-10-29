@@ -31,7 +31,7 @@ const Login = () => {
       };
     });
     console.log(inputs);
-    await fetch("http://127.0.0.1:5001/login", {
+    await fetch("https://api2.genesysailabs.com/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -110,8 +110,21 @@ const Report = ({ setSelectedButton }) => {
 
     const fetchData = async () => {
       let patientInfo = JSON.parse(localStorage.getItem("patient"));
+      let clinicinfo = JSON.parse(localStorage.getItem("clinic"));
+ 
+      let patientid;
+
+      
+      if(patientInfo[1].includes('_'))
+      {
+        patientid = patientInfo[1];
+      }
+       else{
+        patientid =clinicinfo[0] + "_" + patientInfo[1];
+       }
+
       const embryoData = await fetchJSON(
-        "embryo/get/" + patientInfo[1],
+        "embryo/get/" + patientid,
         "GET",
         ""
       );
@@ -472,12 +485,19 @@ const Report = ({ setSelectedButton }) => {
 
       <div className="emb-container col-12 col-md-12 ">
         {loading && (
-          <Backdrop
-            sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-            open={loading}
-          >
-            <CircularProgress color="inherit" />
-          </Backdrop>
+          
+          NotificationManager.success(
+            "Download Started",
+            "Embryo",
+            1000
+          )
+
+          // <Backdrop
+          //   sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          //   open={loading}
+          // >
+          //   <CircularProgress color="inherit" />
+          // </Backdrop>
         )}
         <div className="flex-box">
           <div className="embryo-heading">Embryos</div>
