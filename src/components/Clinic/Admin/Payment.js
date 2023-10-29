@@ -297,8 +297,6 @@ const Payment = ({ setSelectedButton }) => {
     (page - 1) * rowsPerPage + rowsPerPage
   );
 
-  console.log(typeof Payme);
-
   return (
     <Box
       sx={{
