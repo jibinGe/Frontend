@@ -129,6 +129,11 @@ const Report = ({ setSelectedButton }) => {
         ""
       );
 
+
+     
+
+
+    
       const sorted = [...embryoData.embryo_details].sort(
         (a, b) => a.percentage - b.percentage
       );
@@ -149,7 +154,16 @@ const Report = ({ setSelectedButton }) => {
         );
         setEmbryoInfo(sorted);
         console.log(sorted);
+
+       
+
       }
+
+      if (embryoData.embryo_details.length === 0) {
+        history("/embryo");
+      }
+
+
     };
 
     fetchData();
