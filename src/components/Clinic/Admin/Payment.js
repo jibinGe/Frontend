@@ -286,6 +286,8 @@ const Payment = ({ setSelectedButton }) => {
       return matchesSearchQuery;
     }
   });
+
+
   const handleClick = (value) => {
     setSelectedButton(6, value);
   };
@@ -294,6 +296,9 @@ const Payment = ({ setSelectedButton }) => {
     (page - 1) * rowsPerPage,
     (page - 1) * rowsPerPage + rowsPerPage
   );
+
+  console.log(typeof Payme);
+
   return (
     <Box
       sx={{
