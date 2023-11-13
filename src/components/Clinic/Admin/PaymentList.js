@@ -398,24 +398,6 @@ const PaymentList = ({ setSelectedButton }) => {
                   gap: 2,
                 }}
               >
-                <Typography variant="span">Filter by</Typography>
-                <FormControl>
-          <select id="cars" className="inpt5" name="cars" >
-                    <option value="" disabled selected>Month</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                  </select>
-          </FormControl>
-        
-    <FormControl>
-    <select id="cars" className="inpt5" name="cars" >
-                    <option value="" disabled selected>Year</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                  </select>
-    </FormControl>
                 {/* <Text
                   id="outlined-select-currency"
                   select

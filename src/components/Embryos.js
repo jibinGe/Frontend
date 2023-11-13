@@ -202,7 +202,7 @@ const Embryos = ({ setSelectedButton,setSelectedItem }) => {
     //   });
     setIsButtonDisabled(true);
     setIsScreening(true);
-    await fetch("https://api.genesysailabs.com/upload_process", {
+    await fetch("http://13.228.104.12:5000/upload_process", {
       method: "POST",
       body: formData,
     })
