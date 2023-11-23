@@ -202,41 +202,194 @@ const Embryos = ({ setSelectedButton,setSelectedItem }) => {
     //   });
     setIsButtonDisabled(true);
     setIsScreening(true);
-    await fetch("http://13.228.104.12:5000/upload_process", {
+    
+    const batchSize = 3; // Number of files per batch
+    const patientId = patientInfo[0]; // Assuming patientId is fetched from patientInfo
+const clinicName = clinicinfo[1]; // Assuming clinicName is fetched from clinicInfo
+let count = 0;
+const embryo_details = [];
+    
+
+async function uploadBatch(startIndex) {
+  const batch = files.slice(startIndex, startIndex + batchSize);
+  
+  const formData = new FormData();
+
+  for (let i = 0; i < batch.length; i++) {
+    formData.append("file", batch[i]);
+    formData.append("patient_id", patientId);
+    formData.append("clinic_name", clinicName);
+  }
+
+  try {
+    const response = await fetch("http://13.228.104.12:5000/upload_process", {
       method: "POST",
       body: formData,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Upload successful:", data);
+    });
 
-        setOutputData(data);
+    const data = await response.json();
+    console.log("Upload successful:", data);
+  
 
-        localStorage.removeItem("hasRun");
-        let count = 0;
+  
+    for (let embryo of data) {
+      count++;
+      let embryostate;
+      if (embryo.percentage > 75) {
+        embryostate = "good";
+      } else if (embryo.percentage > 50 && embryo.percentage <= 75) {
+        embryostate = "fair";
+      } else {
+        embryostate = "poor";
+      }
 
-        dataUploader(data);
+      let embryo_detail = {
+        embryo_number: "",
+        embryo_name: "",
+        embryo_age: "5 Days",
+        cycle_id: JSON.parse(localStorage.getItem("patient"))[4],
+        scan_date: null,
+        collection_date: null,
+        transfer_date: null,
+        pregnancy: "----",
+        live_birth: "----",
+        clinical_notes: "",
+        embryo_status: "",
+        patient_id: JSON.parse(localStorage.getItem("patient"))[0],
+        percentage: embryo.percentage,
+        embryo_state: embryostate,
+        embryo_link: embryo.img,
+        filename: embryo.filename,
+        slno: count,
+      };
+      embryo_details.push(embryo_detail);
+     
+    }
+    if (embryo_details.length > 0) {
+      setIsViewList(true);
+    } else {
+      setIsViewList(false);
+    }
 
-        //    setIsScreening(false);
+    console.log("Upload successful1:", embryo_details);
+
+
+    let embryo_details1 = [];
+    for (let embryo of embryo_details) {
+      count++;
+      let embryostate;
+      if (embryo.percentage > 75) {
+        embryostate = "good";
+      } else if (embryo.percentage > 50 && embryo.percentage <= 75) {
+        embryostate = "fair";
+      } else {
+        embryostate = "poor";
+      }
+
+      let embryo_detail = {
+        embryo_number: "",
+        embryo_name: "",
+        embryo_age: "5 Days",
+        cycle_id: JSON.parse(localStorage.getItem("patient"))[4],
+        scan_date: null,
+        collection_date: null,
+        transfer_date: null,
+        pregnancy: "----",
+        live_birth: "----",
+        clinical_notes: "",
+        embryo_status: "",
+        patient_id: JSON.parse(localStorage.getItem("patient"))[0],
+        percentage: embryo.percentage,
+        embryo_state: embryostate,
+        embryo_link: embryo.img,
+        filename: embryo.filename,
+        slno: count,
+      };
+      embryo_details1.push(embryo_detail);
+    }
+
+
+    setEmbryoInfo(embryo_details1);
+   
+    // Handle the uploaded data as needed
+
+    // Set a delay of 2 seconds before the next batch
+    if (startIndex + batchSize < files.length) {
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      uploadBatch(startIndex + batchSize);
+    } else {
+      console.log("All files uploaded successfully");
+      executeSecondFetch(); 
+     dataUploader(embryo_details);
+      // Perform actions after all files are uploaded
+    }
+  } catch (error) {
+    console.error("Error uploading files:", error);
+  }
+}
+
+// Start uploading batches
+uploadBatch(0); // Start with the first batch
+
+    // await fetch("http://13.228.104.12:5000/upload_process", {
+    //   method: "POST",
+    //   body: formData,
+    // })
+    //   .then((response) => response.json())
+    //   .then((data) => {
+    //     console.log("Upload successful:", data);
+
+    //     setOutputData(data);
+
+    //     localStorage.removeItem("hasRun");
+    //     let count = 0;
+
+    //     dataUploader(data);
+
+    //     //    setIsScreening(false);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error uploading files:", error);
+    //   });
+
+    function executeSecondFetch() {
+      // Your code for the second fetch request
+      // Example:
+      const secondFormData = new FormData();
+      // Add data to the secondFormData if needed
+      // ...
+    
+      fetch("https://api.genesysailabs.com/upload_aws", {
+        method: "POST",
+        body: secondFormData,
       })
-      .catch((error) => {
-        console.error("Error uploading files:", error);
-      });
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Second upload successful:", data);
+          // Perform actions after the second upload completes
+        })
+        .catch((error) => {
+          console.error("Error in the second upload:", error);
+        });
+    }
 
-    await fetch("https://api.genesysailabs.com/upload_aws", {
-      method: "POST",
-      body: formData,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Upload successful:", data);
+    
+    // await fetch("https://api.genesysailabs.com/upload_aws", {
+    //   method: "POST",
+    //   body: formData,
+    // })
+    //   .then((response) => response.json())
+    //   .then((data) => {
+    //     console.log("Upload successful:", data);
 
-        setIsScreening(false);
-        setIsButtonDisabled(false);
-      })
-      .catch((error) => {
-        console.error("Error uploading files:", error);
-      });
+    //     setIsScreening(false);
+    //     setIsButtonDisabled(false);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error uploading files:", error);
+    //   });
+
+
   };
 
   const dataUploader = async (data) => {
@@ -277,7 +430,7 @@ const Embryos = ({ setSelectedButton,setSelectedItem }) => {
       embryo_details.push(embryo_detail);
     }
     let final_data = {
-      embryo_details: embryo_details,
+      embryo_details: data,
     };
     await fetchJSON("embryo/create_embryo", "POST", final_data)
       .then((embryoData) => {
