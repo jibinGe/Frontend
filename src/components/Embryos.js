@@ -36,10 +36,13 @@ import Lottie from "lottie-react";
 import Animation from "../Icons/ai-screening.json";
 import Guidelines from "./Embryo/guidelines";
 import UploadImageButton from "../Images/upload-image.png";
-import Backdrop from '@mui/material/Backdrop';
-import CircularProgress from '@mui/material/CircularProgress';
-import {NotificationContainer, NotificationManager} from 'react-notifications';
-import 'react-notifications/lib/notifications.css';
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
+import {
+  NotificationContainer,
+  NotificationManager,
+} from "react-notifications";
+import "react-notifications/lib/notifications.css";
 import { makeStyles } from "@mui/styles";
 import {
   Page,
@@ -52,15 +55,14 @@ import {
 } from "@react-pdf/renderer";
 import MainReport from "./Patient/MainReport";
 
-
 const useStyles = makeStyles((theme) => ({
   modal: {
-    '& .MuiBackdrop-root': {
-      backgroundColor: 'rgba(0, 0, 0, 0.2)'
+    "& .MuiBackdrop-root": {
+      backgroundColor: "rgba(0, 0, 0, 0.2)",
     },
   },
 }));
-const Embryos = ({ setSelectedButton,setSelectedItem }) => {
+const Embryos = ({ setSelectedButton, setSelectedItem }) => {
   const classes = useStyles();
   const location = useLocation();
   var data = location.state;
@@ -69,8 +71,8 @@ const Embryos = ({ setSelectedButton,setSelectedItem }) => {
   const [isScreening, setIsScreening] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const fileInputRef = useRef(null);
- // const height = "auto";
-  const height =isViewList ? "auto" : "550px";
+  // const height = "auto";
+  const height = isViewList ? "auto" : "550px";
   const [isDragOver, setIsDragOver] = useState(false);
   const [outputData, setOutputData] = useState([]);
 
@@ -80,7 +82,6 @@ const Embryos = ({ setSelectedButton,setSelectedItem }) => {
   const [isCheck, setIsCheck] = useState(false);
   const [isViewReport, setIsViewReport] = useState(false);
 
-  
   const [selectedImages, setSelectedImages] = useState([]);
   // const { state, selectedImages } = location.state;
 
@@ -114,6 +115,16 @@ const Embryos = ({ setSelectedButton,setSelectedItem }) => {
   });
   const [isOpen, setIsOpen] = useState(false);
   const [selectedImaged, setSelectedImaged] = useState(null);
+  const [displayIndex, setDisplayIndex] = useState(0);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (displayIndex < embryoInfo.length - 1) {
+        setDisplayIndex(displayIndex + 1);
+      }
+    }, 1000); // Change the delay time (in milliseconds) here
+
+    return () => clearTimeout(timer);
+  }, [displayIndex, embryoInfo.length]);
 
   // useEffect(() => {
   //   const hasRun = localStorage.getItem("hasRun");
@@ -157,20 +168,15 @@ const Embryos = ({ setSelectedButton,setSelectedItem }) => {
   //   }
   // }, [location.state]);
 
-
   React.useEffect(() => {
-    
-    if(isOpen) {
+    if (isOpen) {
       const timer = setTimeout(() => {
         setIsOpen(false);
       }, 1000);
 
       return () => clearTimeout(timer); // Clear the timer if the component is unmounted
     }
-
   }, [isOpen]);
-
-
 
   const handleFileUploader = async (files) => {
     let patientInfo = JSON.parse(localStorage.getItem("patient"));
@@ -202,134 +208,131 @@ const Embryos = ({ setSelectedButton,setSelectedItem }) => {
     //   });
     setIsButtonDisabled(true);
     setIsScreening(true);
-    
-    const batchSize = 3; // Number of files per batch
+
+    const batchSize = 30; // Number of files per batch
     const patientId = patientInfo[0]; // Assuming patientId is fetched from patientInfo
-const clinicName = clinicinfo[1]; // Assuming clinicName is fetched from clinicInfo
-let count = 0;
-const embryo_details = [];
-    
+    const clinicName = clinicinfo[1]; // Assuming clinicName is fetched from clinicInfo
+    let count = 0;
+    const embryo_details = [];
 
-async function uploadBatch(startIndex) {
-  const batch = files.slice(startIndex, startIndex + batchSize);
-  
-  const formData = new FormData();
+    async function uploadBatch(startIndex) {
+      const batch = files.slice(startIndex, startIndex + batchSize);
 
-  for (let i = 0; i < batch.length; i++) {
-    formData.append("file", batch[i]);
-    formData.append("patient_id", patientId);
-    formData.append("clinic_name", clinicName);
-  }
+      const formData = new FormData();
 
-  try {
-    const response = await fetch("http://13.228.104.12:5000/upload_process", {
-      method: "POST",
-      body: formData,
-    });
-
-    const data = await response.json();
-    console.log("Upload successful:", data);
-  
-
-  
-    for (let embryo of data) {
-      count++;
-      let embryostate;
-      if (embryo.percentage > 75) {
-        embryostate = "good";
-      } else if (embryo.percentage > 50 && embryo.percentage <= 75) {
-        embryostate = "fair";
-      } else {
-        embryostate = "poor";
+      for (let i = 0; i < batch.length; i++) {
+        formData.append("file", batch[i]);
+        formData.append("patient_id", patientId);
+        formData.append("clinic_name", clinicName);
       }
 
-      let embryo_detail = {
-        embryo_number: "",
-        embryo_name: "",
-        embryo_age: "5 Days",
-        cycle_id: JSON.parse(localStorage.getItem("patient"))[4],
-        scan_date: null,
-        collection_date: null,
-        transfer_date: null,
-        pregnancy: "----",
-        live_birth: "----",
-        clinical_notes: "",
-        embryo_status: "",
-        patient_id: JSON.parse(localStorage.getItem("patient"))[0],
-        percentage: embryo.percentage,
-        embryo_state: embryostate,
-        embryo_link: embryo.img,
-        filename: embryo.filename,
-        slno: count,
-      };
-      embryo_details.push(embryo_detail);
-     
-    }
-    if (embryo_details.length > 0) {
-      setIsViewList(true);
-    } else {
-      setIsViewList(false);
-    }
+      try {
+        const response = await fetch(
+          "http://13.228.104.12:5000/upload_process",
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
 
-    console.log("Upload successful1:", embryo_details);
+        const data = await response.json();
+        console.log("Upload successful:", data);
 
+        for (let embryo of data) {
+          count++;
+          let embryostate;
+          if (embryo.percentage > 75) {
+            embryostate = "good";
+          } else if (embryo.percentage > 50 && embryo.percentage <= 75) {
+            embryostate = "fair";
+          } else {
+            embryostate = "poor";
+          }
 
-    let embryo_details1 = [];
-    for (let embryo of embryo_details) {
-      count++;
-      let embryostate;
-      if (embryo.percentage > 75) {
-        embryostate = "good";
-      } else if (embryo.percentage > 50 && embryo.percentage <= 75) {
-        embryostate = "fair";
-      } else {
-        embryostate = "poor";
+          let embryo_detail = {
+            embryo_number: "",
+            embryo_name: "",
+            embryo_age: "5 Days",
+            cycle_id: JSON.parse(localStorage.getItem("patient"))[4],
+            scan_date: null,
+            collection_date: null,
+            transfer_date: null,
+            pregnancy: "----",
+            live_birth: "----",
+            clinical_notes: "",
+            embryo_status: "",
+            patient_id: JSON.parse(localStorage.getItem("patient"))[0],
+            percentage: embryo.percentage,
+            embryo_state: embryostate,
+            embryo_link: embryo.img,
+            filename: embryo.filename,
+            slno: count,
+          };
+          embryo_details.push(embryo_detail);
+        }
+        if (embryo_details.length > 0) {
+          setIsViewList(true);
+        } else {
+          setIsViewList(false);
+        }
+
+        console.log("Upload successful1:", embryo_details);
+
+        let embryo_details1 = [];
+        for (let embryo of embryo_details) {
+          count++;
+          let embryostate;
+          if (embryo.percentage > 75) {
+            embryostate = "good";
+          } else if (embryo.percentage > 50 && embryo.percentage <= 75) {
+            embryostate = "fair";
+          } else {
+            embryostate = "poor";
+          }
+
+          let embryo_detail = {
+            embryo_number: "",
+            embryo_name: "",
+            embryo_age: "5 Days",
+            cycle_id: JSON.parse(localStorage.getItem("patient"))[4],
+            scan_date: null,
+            collection_date: null,
+            transfer_date: null,
+            pregnancy: "----",
+            live_birth: "----",
+            clinical_notes: "",
+            embryo_status: "",
+            patient_id: JSON.parse(localStorage.getItem("patient"))[0],
+            percentage: embryo.percentage,
+            embryo_state: embryostate,
+            embryo_link: embryo.img,
+            filename: embryo.filename,
+            slno: count,
+          };
+          embryo_details1.push(embryo_detail);
+        }
+
+        setEmbryoInfo(embryo_details1);
+
+        // Handle the uploaded data as needed
+
+        // Set a delay of 2 seconds before the next batch
+        if (startIndex + batchSize < files.length) {
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+          uploadBatch(startIndex + batchSize);
+        } else {
+          console.log("All files uploaded successfully");
+          executeSecondFetch();
+          dataUploader(embryo_details);
+          // Perform actions after all files are uploaded
+        }
+      } catch (error) {
+        console.error("Error uploading files:", error);
       }
-
-      let embryo_detail = {
-        embryo_number: "",
-        embryo_name: "",
-        embryo_age: "5 Days",
-        cycle_id: JSON.parse(localStorage.getItem("patient"))[4],
-        scan_date: null,
-        collection_date: null,
-        transfer_date: null,
-        pregnancy: "----",
-        live_birth: "----",
-        clinical_notes: "",
-        embryo_status: "",
-        patient_id: JSON.parse(localStorage.getItem("patient"))[0],
-        percentage: embryo.percentage,
-        embryo_state: embryostate,
-        embryo_link: embryo.img,
-        filename: embryo.filename,
-        slno: count,
-      };
-      embryo_details1.push(embryo_detail);
     }
 
-
-    setEmbryoInfo(embryo_details1);
-   
-    // Handle the uploaded data as needed
-
-    // Set a delay of 2 seconds before the next batch
-    if (startIndex + batchSize < files.length) {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      uploadBatch(startIndex + batchSize);
-    } else {
-      console.log("All files uploaded successfully");
-      executeSecondFetch(); 
-     dataUploader(embryo_details);
-      // Perform actions after all files are uploaded
-    }
-  } catch (error) {
-    console.error("Error uploading files:", error);
-  }
-}
-
-// Start uploading batches
-uploadBatch(0); // Start with the first batch
+    // Start uploading batches
+    uploadBatch(0); // Start with the first batch
 
     // await fetch("http://13.228.104.12:5000/upload_process", {
     //   method: "POST",
@@ -358,7 +361,7 @@ uploadBatch(0); // Start with the first batch
       const secondFormData = new FormData();
       // Add data to the secondFormData if needed
       // ...
-    
+
       fetch("https://api.genesysailabs.com/upload_aws", {
         method: "POST",
         body: secondFormData,
@@ -373,7 +376,6 @@ uploadBatch(0); // Start with the first batch
         });
     }
 
-    
     // await fetch("https://api.genesysailabs.com/upload_aws", {
     //   method: "POST",
     //   body: formData,
@@ -388,8 +390,6 @@ uploadBatch(0); // Start with the first batch
     //   .catch((error) => {
     //     console.error("Error uploading files:", error);
     //   });
-
-
   };
 
   const dataUploader = async (data) => {
@@ -442,7 +442,6 @@ uploadBatch(0); // Start with the first batch
         );
         setEmbryoInfo(sorted);
 
- 
         setEmbryodata(sorted);
         setEmbryodatainfo(embryoData);
 
@@ -619,7 +618,11 @@ uploadBatch(0); // Start with the first batch
     fetchJSON("embryo/update", "POST", updatearray)
       .then((data_response) => {
         if (data_response.success == true) {
-          NotificationManager.success('Embryo details saved successfully', 'Embryo',2000);
+          NotificationManager.success(
+            "Embryo details saved successfully",
+            "Embryo",
+            2000
+          );
           // setIsOpen(true);
         } else {
           alert("Something Went Wrong");
@@ -675,68 +678,58 @@ uploadBatch(0); // Start with the first batch
     }
   };
 
-
   const handleOpenInNewTab = () => {
-    if(!isButtonDisabled) {
-
+    if (!isButtonDisabled) {
       let patientInfo = JSON.parse(localStorage.getItem("patient"));
 
       const patientData = {
         patient_id: patientInfo[1],
-        
       };
 
       generatePDF();
-      NotificationManager.success(
-        "Download Started",
-        "Embryo",
-        1000
-      )
-    //   fetchJSON("patient/viewreport", "POST", patientData)
-    //   .then((data_response) => {
-    //     if (data_response.success == true) {
-          
-    //     } else {
-          
-    //     }
-    //   })
-    //   .catch((err) => {
-         
-    //   });
+      NotificationManager.success("Download Started", "Embryo", 1000);
+      //   fetchJSON("patient/viewreport", "POST", patientData)
+      //   .then((data_response) => {
+      //     if (data_response.success == true) {
 
- 
-    //   const newPath = "/MainReport";
-    //   const currentURL = location.pathname;
-    //   const baseURL = window.location.href.replace(currentURL, '');
-    //   const fullURL = `${baseURL}${newPath}`;
-  
-    //   window.open(fullURL, "_blank");
-     history("/report");
+      //     } else {
+
+      //     }
+      //   })
+      //   .catch((err) => {
+
+      //   });
+
+      //   const newPath = "/MainReport";
+      //   const currentURL = location.pathname;
+      //   const baseURL = window.location.href.replace(currentURL, '');
+      //   const fullURL = `${baseURL}${newPath}`;
+
+      //   window.open(fullURL, "_blank");
+      history("/report");
     }
-  
 
-  
     // If you also need to send state to the new tab, you'll have to use other mechanisms, like local storage or session storage.
-};
-const sliceEmbryoArray = (data) => {
-  const sorted = [...data].sort((a, b) => b.percentage - a.percentage);
+  };
+  const sliceEmbryoArray = (data) => {
+    const sorted = [...data].sort((a, b) => b.percentage - a.percentage);
 
-  let newArrayNumber = Math.ceil(sorted.length / 4);
-  let result = [];
-  for (let i = 0; i < newArrayNumber; i++) {
-    result.push(sorted.slice(i * 4, (i + 1) * 4));
-  }
+    let newArrayNumber = Math.ceil(sorted.length / 4);
+    let result = [];
+    for (let i = 0; i < newArrayNumber; i++) {
+      result.push(sorted.slice(i * 4, (i + 1) * 4));
+    }
 
-  console.log(result);
-  return result;
-};
-const generatePDF = async () => {
-  const newPath = "/ReportDownload";
-  const currentURL = location.pathname;
-  const baseURL = window.location.href.replace(currentURL, "");
-  const fullURL = `${baseURL}${newPath}`;
+    console.log(result);
+    return result;
+  };
+  const generatePDF = async () => {
+    const newPath = "/ReportDownload";
+    const currentURL = location.pathname;
+    const baseURL = window.location.href.replace(currentURL, "");
+    const fullURL = `${baseURL}${newPath}`;
 
-  // window.open(fullURL, "_blank");
+    // window.open(fullURL, "_blank");
 
     setLoading(true);
     const patientData1 = JSON.parse(localStorage.getItem("patient"));
@@ -746,7 +739,7 @@ const generatePDF = async () => {
       id: patientData1[1],
       name: patientData1[2],
       age: 0,
-      DOB:patientData1[3],
+      DOB: patientData1[3],
       retreval: new Date(),
     };
 
@@ -758,33 +751,34 @@ const generatePDF = async () => {
       date: new Date(),
       embryos: embryoInfo.length,
     };
-    const blob = pdf(<MainReport
-    patientData={patientData}
-    clinicData={clinicData}
-    reportData={reportData}
-    data={sliceEmbryoArray(embryoInfo)}
-  />).toBlob();
+    const blob = pdf(
+      <MainReport
+        patientData={patientData}
+        clinicData={clinicData}
+        reportData={reportData}
+        data={sliceEmbryoArray(embryoInfo)}
+      />
+    ).toBlob();
 
-    blob.then(result => {
-     // saveAs(result, 'document.pdf');
-    //  setLoading(false);
-//    const blobURL = URL.createObjectURL(result);
- //   const newWindow = window.open(blobURL, '_blank');
+    blob.then((result) => {
+      // saveAs(result, 'document.pdf');
+      //  setLoading(false);
+      //    const blobURL = URL.createObjectURL(result);
+      //   const newWindow = window.open(blobURL, '_blank');
 
-   // newWindow.location.href = blobURL;
+      // newWindow.location.href = blobURL;
 
-      saveAs(result, patientData1[2] + '.pdf');
+      saveAs(result, patientData1[2] + ".pdf");
 
-    // newWindow.onbeforeunload = () => {
-    //   setTimeout(() => {
-    //     newWindow.close();
-    //   }, 1000); // Close after 1 second. Adjust the time if needed.
-    // };
+      // newWindow.onbeforeunload = () => {
+      //   setTimeout(() => {
+      //     newWindow.close();
+      //   }, 1000); // Close after 1 second. Adjust the time if needed.
+      // };
 
-    setLoading(false);
-
+      setLoading(false);
     });
-};
+  };
 
   const [isOpenGuidline, setIsOpenGuidline] = useState(false);
   const [isimgOpen, setimgIsOpen] = useState(false);
@@ -808,43 +802,35 @@ const generatePDF = async () => {
     console.log(sorted);
   };
   const handleClick = () => {
-   
-  //  setSelectedButton(7);
-  history("/sidebar", { state: { variable: 4 } }); 
-  
-  }
+    //  setSelectedButton(7);
+    history("/sidebar", { state: { variable: 4 } });
+  };
   return (
     <div>
-        {isViewReport ? (
+      {isViewReport ? (
         <>
-          <button onClick={() =>   handleClick()} className="back-button">
+          <button onClick={() => handleClick()} className="back-button">
             Back
           </button>{" "}
           <PatientDetails />
-   
         </>
       ) : (
-       
         <div>
-        <button onClick={() =>   handleClick()} className="back-button">
-          Back
-        </button>
-        <PatientDetails />
-        
-      </div>
+          <button onClick={() => handleClick()} className="back-button">
+            Back
+          </button>
+          <PatientDetails />
+        </div>
       )}
       {isViewReport ? (
         <>
-          <button onClick={() =>   handleClick()} className="back-button">
+          <button onClick={() => handleClick()} className="back-button">
             Back
           </button>{" "}
           <PatientDetails />
         </>
       ) : (
-        
-        
         <div className="add-embryo" style={{ height: height }}>
-          
           <div
             style={{
               display: "flex",
@@ -856,19 +842,18 @@ const generatePDF = async () => {
             }}
           >
             <div className="add-embryo-heading">Add day 5 Embryo Images</div>
-           
           </div>
 
           <div
             style={{
               display: "flex",
               width: "60%",
-            
+
               justifyContent: "flex-end",
               marginBottom: "2px",
             }}
           >
-              <div className="user-guideline">
+            <div className="user-guideline">
               <button onClick={() => setIsOpenGuidline(true)}>
                 <img src={InfoIcon} alt="user-guidelines" />{" "}
                 <span>User guidelines</span>
@@ -877,11 +862,8 @@ const generatePDF = async () => {
                 <Guidelines setIsOpenGuidline={setIsOpenGuidline} />
               </Modal>
             </div>
-           
           </div>
 
-
-       
           <div className="upload-box">
             {isScreening ? (
               <div className="ai-screening-box">
@@ -960,22 +942,23 @@ const generatePDF = async () => {
               </div>
               {isSort ? (
                 <div className="filter__box" onClick={sortArrayAscending}>
-                  <ArrowUpwardIcon style={{cursor: 'pointer'}} sx={{ color: "#6C7C93" }} />
+                  <ArrowUpwardIcon
+                    style={{ cursor: "pointer" }}
+                    sx={{ color: "#6C7C93" }}
+                  />
                 </div>
               ) : (
                 <div className="filter__box" onClick={sortArrayDescending}>
-                  <ArrowDownwardIcon style={{cursor: 'pointer'}} sx={{ color: "#6C7C93" }} />
+                  <ArrowDownwardIcon
+                    style={{ cursor: "pointer" }}
+                    sx={{ color: "#6C7C93" }}
+                  />
                 </div>
               )}
-{!isButtonDisabled && (
-              <button
-              onClick={handleOpenInNewTab}
-                
-                className="btn2"
-                 
-              >
-                View Report
-              </button>
+              {!isButtonDisabled && (
+                <button onClick={handleOpenInNewTab} className="btn2">
+                  View Report
+                </button>
               )}
             </div>
           </div>
@@ -986,7 +969,7 @@ const generatePDF = async () => {
               justifyContent: "center",
             }}
           >
-            {embryoInfo?.map((d, i) => {
+           {embryoInfo.slice(0, displayIndex + 1).map((d, i) => {
               let score = parseFloat(d.percentage).toFixed(2);
               let scoreColor =
                 score >= 75
@@ -1006,10 +989,9 @@ const generatePDF = async () => {
 
               return (
                 <div
-                  className="emb-box "
+                  className="emb-box"
                   style={{ border: scoreColor, background: scoreColor }}
                 >
-                 
                   <div className="box5">
                     <div
                       className="txt10"
@@ -1018,23 +1000,29 @@ const generatePDF = async () => {
                       <span className="txt12">{d.embryo_status}</span>
                     </div>
                     <div style={{ width: "82%" }}>
-
-                    {Array.isArray(selectedImages) && selectedImages.map((image, index) => {
-    if (d.filename === image.name) {
-      return <img key={index} src={URL.createObjectURL(image)}  style={{
-        border: isOpen ? "4px solid #010B18" : "",
-        margin: 10,
-      }}
-      onClick={() =>  {
-        setSelectedImaged(URL.createObjectURL(image));
-        setimgIsOpen(true);
-    }}
-      className="emb-img"
-      alt="" />
-    } else {
-      return null;
-    }
-  })}
+                      {Array.isArray(selectedImages) &&
+                        selectedImages.map((image, index) => {
+                          if (d.filename === image.name) {
+                            return (
+                              <img
+                                key={index}
+                                src={URL.createObjectURL(image)}
+                                style={{
+                                  border: isOpen ? "4px solid #010B18" : "",
+                                  margin: 10,
+                                }}
+                                onClick={() => {
+                                  setSelectedImaged(URL.createObjectURL(image));
+                                  setimgIsOpen(true);
+                                }}
+                                className="emb-img"
+                                alt=""
+                              />
+                            );
+                          } else {
+                            return null;
+                          }
+                        })}
 
                       {/* <LazyLoadImage
                         style={{
@@ -1472,3 +1460,4 @@ const generatePDF = async () => {
 };
 
 export default Embryos;
+ 
