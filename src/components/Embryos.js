@@ -234,7 +234,8 @@ const Embryos = ({ setSelectedButton, setSelectedItem }) => {
             body: formData,
           }
         );
-
+        setDisplayIndex(0);
+        
         const data = await response.json();
         console.log("Upload successful:", data);
 
