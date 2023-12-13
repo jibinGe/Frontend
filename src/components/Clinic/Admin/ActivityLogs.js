@@ -58,24 +58,6 @@ const months = [
   'December',
 ];
 
-const currencies = [
-  {
-    value: "USD",
-    label: "$",
-  },
-  {
-    value: "EUR",
-    label: "€",
-  },
-  {
-    value: "BTC",
-    label: "฿",
-  },
-  {
-    value: "JPY",
-    label: "¥",
-  },
-];
 
 const useStyles = makeStyles((theme) => ({
   pagination: {
@@ -209,6 +191,9 @@ const ActivityLogs = ({ setSelectedButton,setSelectedItem }) => {
   const [dele, setDelete] = useState();
 
   
+const currentYear = new Date().getFullYear().toString();
+
+const [filterOptionsyear, setFilterOptionsyear] = useState(currentYear);
   
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -231,7 +216,11 @@ const ActivityLogs = ({ setSelectedButton,setSelectedItem }) => {
       setDeleteConfirmation(null);
     }
   };
-  
+  const handleFilterOptionChangeyear = (event) => {
+    // Update the filter options based on the selected value
+    setFilterOptionsyear(event.target.value);
+  };
+
   const deleteEmployee = async (item) => {
     let hit = await fetchJSON("employee/delete", "POST", {
       patient_id: item[1],
@@ -265,14 +254,56 @@ const ActivityLogs = ({ setSelectedButton,setSelectedItem }) => {
     setFilterOptions(event.target.value);
   };
   const filteredProducts = EmployeeDetails.filter((employee) => {
+
     const matchesSearchQuery = employee.EmployeeName
     .toLowerCase()
     .includes(searchQuery.toLowerCase());
-    if (searchQuery === "" && filterOptions === "") {
-      return true; // Show all products when both search query and filter options are empty
-    } else {
-      return matchesSearchQuery;
-    }
+  
+    const matchesPatientId = employee.EmployeeName
+    .toLowerCase()
+    .includes(searchQuery.toLowerCase());
+
+
+  
+    // Assuming filterOptions is a property in patient object.
+    const date = new Date(employee.LoginDate);
+    const formattedDate = date.toLocaleDateString("en-GB");
+
+    console.log(matchesPatientId);
+ 
+
+  const yearFromPatient = formattedDate.split("/")[2]; 
+  console.log(yearFromPatient);
+  const monthFromPatient = formattedDate.split("/")[1]; 
+  console.log(monthFromPatient);
+
+  const matchesYear = yearFromPatient === filterOptionsyear;
+  const matchesMonth = parseInt(monthFromPatient,10) === parseInt(filterOptions,10);
+  console.log(filterOptionsyear);
+  console.log("matchesMonth" + matchesMonth);
+  const isMatch = matchesYear && matchesMonth;
+
+  console.log(isMatch);
+
+
+  
+if (searchQuery === "" && filterOptions === "") {
+  return true; // Show all products when both search query and filter options are empty
+} else {
+  return    isMatch ;
+}
+
+
+
+
+    // const matchesSearchQuery = employee.EmployeeName
+    // .toLowerCase()
+    // .includes(searchQuery.toLowerCase());
+    // if (searchQuery === "" && filterOptions === "") {
+    //   return true; // Show all products when both search query and filter options are empty
+    // } else {
+    //   return matchesSearchQuery;
+    // }
   });
   const handleClick = (value) => {
  
@@ -319,7 +350,7 @@ const ActivityLogs = ({ setSelectedButton,setSelectedItem }) => {
               marginTop: "32px",
             }}
           >
-            <FormControl>
+            {/* <FormControl>
               <select
                 id="cars"
                 className="inpt5"
@@ -331,11 +362,13 @@ const ActivityLogs = ({ setSelectedButton,setSelectedItem }) => {
                 <option value="3">3</option>
                 <option value="4">4</option>
               </select>
-            </FormControl>
+            </FormControl> */}
 
             <Typography variant="span">Filter by</Typography>
             <FormControl>
-              <select id="cars" className="inpt5" name="cars">
+              <select id="cars" className="inpt5" name="cars"  value={filterOptions}
+                  onChange={handleFilterOptionChange}
+                  multiple={false}>
                 <option value="" disabled selected >Month</option>
                 {months.map((month, index) => (
           <option key={index} value={index + 1}>{month}</option>
@@ -345,7 +378,8 @@ const ActivityLogs = ({ setSelectedButton,setSelectedItem }) => {
             </FormControl>
 
             <FormControl>
-              <select id="cars" className="inpt5" name="cars">
+              <select id="cars" className="inpt5" name="cars" value={filterOptionsyear}
+                  onChange={handleFilterOptionChangeyear}  multiple={false}> 
                 <option value="" disabled selected >Year</option>
                 <option value="2023">2023</option>
                   <option value="2024">2024</option>

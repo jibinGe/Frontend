@@ -38,12 +38,12 @@ const Welcome = () => {
             </div>
             <p className="box-txt">View Patients</p>
           </div>
-          <div className="box" onClick={() => handleClick(6)}>
+          {/* <div className="box" onClick={() => handleClick(6)}>
             <div className="image">
               <img src={Accounts} alt= "accounts" />
             </div>
             <p className="box-txt">Accounts</p>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

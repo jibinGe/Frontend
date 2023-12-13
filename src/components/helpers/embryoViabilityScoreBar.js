@@ -92,10 +92,12 @@ function EmbryoScoreBar(props) {
   };
 
   const Pie = (props) => {
+    const roundedPercentage =  props.result;
+
     const score =
-      props.percentage >= 75
+    roundedPercentage >= 75
         ? { label: "Good", color: "#6DA6F8", text: "#47D273" }
-        : props.percentage >= 50
+        : roundedPercentage >= 50
         ? { label: "Fair", color: "#5497F7", text:"#FAC20A" }
         : { label: "Poor", color: "#6DA6F8", text:"#FB3B42" };
 

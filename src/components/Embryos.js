@@ -228,7 +228,7 @@ const Embryos = ({ setSelectedButton, setSelectedItem }) => {
 
       try {
         const response = await fetch(
-          "http://13.228.104.12:5000/upload_process",
+          "https://process.genesysailabs.com/upload_process",
           {
             method: "POST",
             body: formData,
@@ -242,9 +242,9 @@ const Embryos = ({ setSelectedButton, setSelectedItem }) => {
         for (let embryo of data) {
           count++;
           let embryostate;
-          if (embryo.percentage > 75) {
+          if (embryo.percentage >= 75) {
             embryostate = "good";
-          } else if (embryo.percentage > 50 && embryo.percentage <= 75) {
+          } else if (embryo.percentage >= 50 && embryo.percentage < 75) {
             embryostate = "fair";
           } else {
             embryostate = "poor";
@@ -283,9 +283,9 @@ const Embryos = ({ setSelectedButton, setSelectedItem }) => {
         for (let embryo of embryo_details) {
           count++;
           let embryostate;
-          if (embryo.percentage > 75) {
+          if (embryo.percentage >= 75) {
             embryostate = "good";
-          } else if (embryo.percentage > 50 && embryo.percentage <= 75) {
+          } else if (embryo.percentage >= 50 && embryo.percentage < 75) {
             embryostate = "fair";
           } else {
             embryostate = "poor";
@@ -363,7 +363,7 @@ const Embryos = ({ setSelectedButton, setSelectedItem }) => {
       // Add data to the secondFormData if needed
       // ...
 
-      fetch("https://api.genesysailabs.com/upload_aws", {
+      fetch("https://process.genesysailabs.com/upload_aws", {
         method: "POST",
         body: secondFormData,
       })
@@ -401,13 +401,15 @@ const Embryos = ({ setSelectedButton, setSelectedItem }) => {
     for (let embryo of data) {
       count++;
       let embryostate;
-      if (embryo.percentage > 75) {
+      if (embryo.percentage >= 75) {
         embryostate = "good";
-      } else if (embryo.percentage > 50 && embryo.percentage <= 75) {
+      } else if (embryo.percentage >= 50 && embryo.percentage < 75) {
         embryostate = "fair";
       } else {
         embryostate = "poor";
       }
+
+      console.log("embryostate:", embryostate);
 
       let embryo_detail = {
         embryo_number: "",
@@ -972,13 +974,14 @@ const Embryos = ({ setSelectedButton, setSelectedItem }) => {
           >
            {embryoInfo.slice(0, displayIndex + 1).map((d, i) => {
               let score = parseFloat(d.percentage).toFixed(2);
+              
               let scoreColor =
                 score >= 75
                   ? "8px solid #47D273"
                   : score >= 50
                   ? "8px solid #FAC20A"
                   : "8px solid #FB3B42";
-
+              
               const backgroundColor =
                 d.embryo_status === "Transferred"
                   ? "#2279F5"

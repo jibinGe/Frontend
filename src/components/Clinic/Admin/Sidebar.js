@@ -198,7 +198,7 @@ const Sidebar = () => {
             View Patients
           </StyledTypography>
         </BoxContainer>
-        <BoxContainer
+        {/* <BoxContainer
           variant="text"
           sx={{ marginTop: "40px", outlineStyle: "none" }}
           style={{
@@ -231,7 +231,7 @@ const Sidebar = () => {
           >
             Accounts
           </StyledTypography>
-        </BoxContainer>
+        </BoxContainer> */}
         <BoxContainer
           variant="text"
           sx={{ marginTop: "40px", outlineStyle: "none" }}
