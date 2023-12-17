@@ -323,7 +323,7 @@ const Embryos = ({ setSelectedButton, setSelectedItem }) => {
           uploadBatch(startIndex + batchSize);
         } else {
           console.log("All files uploaded successfully");
-          executeSecondFetch();
+          executeSecondFetch(formData);
           dataUploader(embryo_details);
           // Perform actions after all files are uploaded
         }
@@ -356,7 +356,7 @@ const Embryos = ({ setSelectedButton, setSelectedItem }) => {
     //     console.error("Error uploading files:", error);
     //   });
 
-    function executeSecondFetch() {
+    function executeSecondFetch(formData) {
       // Your code for the second fetch request
       // Example:
       const secondFormData = new FormData();
@@ -365,10 +365,11 @@ const Embryos = ({ setSelectedButton, setSelectedItem }) => {
 
       fetch("https://process.genesysailabs.com/upload_aws", {
         method: "POST",
-        body: secondFormData,
+        body: formData,
       })
         .then((response) => response.json())
         .then((data) => {
+          setIsButtonDisabled(false);
           console.log("Second upload successful:", data);
           // Perform actions after the second upload completes
         })
